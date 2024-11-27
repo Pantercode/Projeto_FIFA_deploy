@@ -1,8 +1,10 @@
 import streamlit as st
+import pandas as pd
 
+# Configuração da página
 st.set_page_config(
-    page_title="Players",
-    page_icon="🏃🏼",
+    page_title="Teams",
+    page_icon="⚽",
     layout="wide"
 )
 
@@ -13,27 +15,27 @@ else:
     df_data = st.session_state["data"]
 
     # Sidebar para seleção de clube
-    clubes = df_data["Club"].value_counts().index
-    club = st.sidebar.selectbox("Clube", clubes)
+    clubes = df_data["Club"].dropna().value_counts().index
+    club = st.sidebar.selectbox("Selecione o Clube", clubes)
 
     # Filtrar dados do clube selecionado
     df_filtered = df_data[df_data["Club"] == club].set_index("Name")
 
-    # Exibir logo do clube e título
-    if "Club Logo" in df_filtered.columns:
-        st.image(df_filtered.iloc[0]["Club Logo"])
+    # Exibir logo do clube e título do clube
     st.markdown(f"## {club}")
+    if "Club Logo" in df_filtered.columns and pd.notna(df_filtered.iloc[0]["Club Logo"]):
+        st.image(df_filtered.iloc[0]["Club Logo"], width=150)
 
-    # Colunas a exibir
+    # Definir colunas a exibir na tabela
     columns = [
-        "Age", "Photo", "Flag", "Overall", 'Value(£)', 'Wage(£)', 'Joined', 
+        "Age", "Photo", "Flag", "Overall", 'Value(£)', 'Wage(£)', 'Joined',
         'Height(cm.)', 'Weight(lbs.)', 'Contract Valid Until', 'Release Clause(£)'
     ]
 
-    # Garantir que as colunas existam
+    # Garantir que apenas as colunas que existem no DataFrame sejam usadas
     columns = [col for col in columns if col in df_filtered.columns]
 
-    # Exibir tabela com dados
+    # Exibir a tabela com os dados formatados
     def format_currency(value):
         """Formata valores monetários."""
         if pd.notna(value):
@@ -47,7 +49,7 @@ else:
         if col in df_filtered_display.columns:
             df_filtered_display[col] = df_filtered_display[col].apply(format_currency)
 
-    # Exibir a tabela com imagens
+    # Exibir a tabela com os dados do clube
     st.dataframe(
         df_filtered_display.style.format({
             "Overall": "{:.0f}",
