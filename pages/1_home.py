@@ -52,3 +52,6 @@ st.markdown(
     Explore atributos de jogadores, análise de clubes, posicionamento de jogadores e tendências no futebol ao longo do tempo.
     """
 )
+
+
+streamlit run 1_home.py
