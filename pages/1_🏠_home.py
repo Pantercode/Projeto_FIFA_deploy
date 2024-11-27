@@ -31,8 +31,7 @@ st.sidebar.markdown(
 )
 
 # Botão para acessar o Kaggle
-btn = st.button("Acesse os dados no Kaggle")
-if btn:
+if st.button("Acesse os dados no Kaggle"):
     webbrowser.open_new_tab("https://www.kaggle.com/datasets/kevwesophia/fifa23-official-datasetclean-data")
 
 # Descrição do conjunto de dados
